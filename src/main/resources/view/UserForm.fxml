@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllerui.UserFormController"
+            prefWidth="450" prefHeight="400"
+            style="-fx-background-color: white;">
+
+    <VBox spacing="20" alignment="CENTER" style="-fx-padding: 30;">
+        
+        <!-- Header -->
+        <Label fx:id="formTitle" text="Tambah Pengguna Baru" 
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0c7b93;"/>
+        
+        <!-- Form Fields -->
+        <VBox spacing="15" prefWidth="350">
+            
+            <!-- Username Field -->
+            <VBox spacing="5">
+                <Label text="Username *" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <TextField fx:id="usernameField" promptText="Masukkan username" 
+                          style="-fx-pref-height: 40; -fx-font-size: 14px; -fx-background-radius: 6; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-padding: 0 0 0 12;"/>
+            </VBox>
+            
+            <!-- Password Field -->
+            <VBox spacing="5">
+                <Label text="Password *" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <PasswordField fx:id="passwordField" promptText="Masukkan password" 
+                              style="-fx-pref-height: 40; -fx-font-size: 14px; -fx-background-radius: 6; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-padding: 0 0 0 12;"/>
+            </VBox>
+            
+            <!-- Confirm Password Field -->
+            <VBox spacing="5">
+                <Label text="Konfirmasi Password *" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <PasswordField fx:id="confirmPasswordField" promptText="Konfirmasi password" 
+                              style="-fx-pref-height: 40; -fx-font-size: 14px; -fx-background-radius: 6; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-padding: 0 0 0 12;"/>
+            </VBox>
+            
+            <!-- Role Selection -->
+            <VBox spacing="5">
+                <Label text="Role *" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <ComboBox fx:id="roleComboBox" promptText="Pilih role pengguna" 
+                         style="-fx-pref-height: 40; -fx-font-size: 14px; -fx-background-radius: 6; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 350;"/>
+            </VBox>
+            
+            <!-- Error Label -->
+            <Label fx:id="errorLabel" textFill="#dc2626" visible="false" wrapText="true"
+                   style="-fx-font-size: 12px; -fx-font-weight: 500;"/>
+        </VBox>
+        
+        <!-- Action Buttons -->
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="cancelButton" text="BATAL" onAction="#handleCancel"
+                    style="-fx-background-color: #6b7280; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120; -fx-pref-height: 40; -fx-background-radius: 6; -fx-cursor: hand;"/>
+            <Button fx:id="saveButton" text="SIMPAN" onAction="#handleSave"
+                    style="-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120; -fx-pref-height: 40; -fx-background-radius: 6; -fx-cursor: hand;"/>
+        </HBox>
+        
+        <Label text="* Field wajib diisi" style="-fx-font-size: 10px; -fx-text-fill: #9ca3af; -fx-font-style: italic;"/>
+        
+    </VBox>
+</AnchorPane>

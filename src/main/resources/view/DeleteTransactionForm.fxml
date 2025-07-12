@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerui.DeleteTransactionController">
+   <children>
+      <VBox spacing="15.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" AnchorPane.bottomAnchor="20.0">
+         <children>
+            <Label text="Hapus Transaksi" textFill="#2C3E50">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            
+            <Separator />
+            
+            <Label fx:id="transactionCountLabel" text="Total transaksi dalam database: 0" />
+            
+            <Label text="Pilih kriteria penghapusan:" textFill="#34495E">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            
+            <VBox spacing="10.0">
+               <children>
+                  <RadioButton fx:id="rbAll" text="Hapus SEMUA transaksi">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </RadioButton>
+                  
+                  <VBox spacing="5.0">
+                     <children>
+                        <RadioButton fx:id="rbPeriod" text="Hapus berdasarkan periode:">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </RadioButton>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Dari:" />
+                              <DatePicker fx:id="startDatePicker" prefWidth="140.0" />
+                              <Label text="Sampai:" />
+                              <DatePicker fx:id="endDatePicker" prefWidth="140.0" />
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  
+                  <VBox spacing="5.0">
+                     <children>
+                        <RadioButton fx:id="rbUser" text="Hapus berdasarkan user:">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </RadioButton>
+                        <ComboBox fx:id="userComboBox" prefWidth="300.0">
+                           <VBox.margin>
+                              <Insets left="20.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+                  
+                  <VBox spacing="5.0">
+                     <children>
+                        <RadioButton fx:id="rbProduct" text="Hapus berdasarkan produk:">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </RadioButton>
+                        <ComboBox fx:id="productComboBox" prefWidth="300.0">
+                           <VBox.margin>
+                              <Insets left="20.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            
+            <Separator />
+            
+            <Label text="⚠️ PERINGATAN: Tindakan ini tidak dapat dibatalkan!" textFill="#E74C3C">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            
+            <HBox spacing="10.0" alignment="CENTER_RIGHT">
+               <children>
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" style="-fx-background-color: #E74C3C; -fx-text-fill: white;" text="Hapus">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleCancel" text="Batal">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

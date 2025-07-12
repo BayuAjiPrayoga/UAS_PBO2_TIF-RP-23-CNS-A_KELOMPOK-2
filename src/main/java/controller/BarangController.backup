@@ -1,0 +1,348 @@
+package controller;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import config.DatabaseConnection;
+import model.Barang;
+import model.interfaces.Searchable;
+import utils.AlertUtils;
+
+/**
+ * BarangController yang mengextend BaseController (Inheritance)
+ * dan mengimplementasi Searchable interface (Polymorphism)
+ */
+public class BarangController extends BaseController<Barang> implements Searchable<Barang> {
+
+    // Implementasi abstract methods dari BaseController (Polymorphism)
+    @Override
+    protected boolean performSave(Barang barang) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "INSERT INTO barang (nama_barang, stok, harga, kategori) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, barang.getNamaBarang());
+                stmt.setInt(2, barang.getStok());
+                stmt.setDouble(3, barang.getHarga());
+                stmt.setString(4, barang.getKategori());
+                return stmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    protected boolean performUpdate(Barang barang) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "UPDATE barang SET nama_barang=?, stok=?, harga=?, kategori=? WHERE id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, barang.getNamaBarang());
+                stmt.setInt(2, barang.getStok());
+                stmt.setDouble(3, barang.getHarga());
+                stmt.setString(4, barang.getKategori());
+                stmt.setInt(5, barang.getId());
+                return stmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    protected boolean performDelete(int id) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "DELETE FROM barang WHERE id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, id);
+                return stmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    protected List<Barang> performGetAll() {
+        List<Barang> list = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM barang ORDER BY nama_barang ASC";
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    Barang b = new Barang();
+                    b.setId(rs.getInt("id"));
+                    b.setNamaBarang(rs.getString("nama_barang"));
+                    b.setStok(rs.getInt("stok"));
+                    b.setHarga(rs.getDouble("harga"));
+                    b.setKategori(rs.getString("kategori"));
+                    list.add(b);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    protected Barang performGetById(int id) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM barang WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        Barang b = new Barang();
+                        b.setId(rs.getInt("id"));
+                        b.setNamaBarang(rs.getString("nama_barang"));
+                        b.setStok(rs.getInt("stok"));
+                        b.setHarga(rs.getDouble("harga"));
+                        b.setKategori(rs.getString("kategori"));
+                        return b;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Implementasi interface Searchable (Polymorphism)
+    @Override
+    public List<Barang> search(String query) {
+        return getAllEntities().stream()
+                .filter(barang -> barang.getNamaBarang().toLowerCase()
+                        .contains(query.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Barang> filterByCategory(String category) {
+        return getAllEntities().stream()
+                .filter(barang -> barang.getKategori().equalsIgnoreCase(category))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Barang> filterByStatus(String status) {
+        return getAllEntities().stream()
+                .filter(barang -> barang.getStokStatus().equalsIgnoreCase(status))
+                .collect(Collectors.toList());
+    }
+
+    // Method overloading (Polymorphism)
+    public List<Barang> getBarangByStatusStok(String status) {
+        return filterByStatus(status);
+    }
+
+    public List<Barang> getBarangByKategori(String kategori) {
+        return filterByCategory(kategori);
+    }
+
+    // Backward compatibility methods (delegation to base class)
+    public List<Barang> getAllBarang() {
+        return getAllEntities();
+    }
+
+    public boolean tambahBarang(Barang barang) {
+        return saveEntity(barang);
+    }
+
+    public boolean updateBarang(Barang barang) {
+        return updateEntity(barang);
+    }
+
+    public boolean deleteBarang(int id) {
+        return deleteEntity(id);
+    }
+
+    public Barang getBarangById(int id) {
+        return getEntityById(id);
+    }
+
+    public boolean updateBarang(Barang barang) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "UPDATE barang SET nama_barang=?, stok=?, harga=? WHERE id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, barang.getNamaBarang());
+                stmt.setInt(2, barang.getStok());
+                stmt.setDouble(3, barang.getHarga());
+                stmt.setInt(4, barang.getId());
+                int result = stmt.executeUpdate();
+                if (result > 0) {
+                    AlertUtils.showInfo("Barang berhasil diupdate!");
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            AlertUtils.showError("Gagal mengupdate barang: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteBarang(int id) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            // Cek apakah barang memiliki transaksi
+            String checkQuery = "SELECT COUNT(*) FROM transaksi WHERE id_barang = ?";
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
+                checkStmt.setInt(1, id);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    // Barang memiliki transaksi, tidak bisa dihapus
+                    return false;
+                }
+            }
+            
+            String query = "DELETE FROM barang WHERE id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, id);
+                int result = stmt.executeUpdate();
+                return result > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateStok(int idBarang, int newStok) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "UPDATE barang SET stok=? WHERE id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, newStok);
+                stmt.setInt(2, idBarang);
+                int result = stmt.executeUpdate();
+                if (result > 0) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            AlertUtils.showError("Gagal mengupdate stok: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Barang getBarangById(int id) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM barang WHERE id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        Barang b = new Barang();
+                        b.setId(rs.getInt("id"));
+                        b.setNamaBarang(rs.getString("nama_barang"));
+                        b.setStok(rs.getInt("stok"));
+                        b.setHarga(rs.getDouble("harga"));
+                        return b;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            AlertUtils.showError("Gagal mengambil data barang: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean cekStokTersedia(int idBarang, int jumlahDiminta) {
+        Barang barang = getBarangById(idBarang);
+        return barang != null && barang.getStok() >= jumlahDiminta;
+    }
+    
+    public StokStatistik getStokStatistik() {
+        StokStatistik stats = new StokStatistik();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT " +
+                          "COUNT(*) as total_produk, " +
+                          "SUM(CASE WHEN stok = 0 THEN 1 ELSE 0 END) as stok_habis, " +
+                          "SUM(CASE WHEN stok > 0 AND stok <= 10 THEN 1 ELSE 0 END) as stok_menipis, " +
+                          "SUM(stok * harga) as nilai_total_stok " +
+                          "FROM barang";
+            
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                
+                if (rs.next()) {
+                    stats.setTotalProduk(rs.getInt("total_produk"));
+                    stats.setStokHabis(rs.getInt("stok_habis"));
+                    stats.setStokMenipis(rs.getInt("stok_menipis"));
+                    stats.setNilaiTotalStok(rs.getDouble("nilai_total_stok"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stats;
+    }
+    
+    public List<Barang> getBarangByStatusStok(String status) {
+        List<Barang> list = new ArrayList<>();
+        String query;
+        
+        switch (status.toLowerCase()) {
+            case "stok habis":
+                query = "SELECT * FROM barang WHERE stok = 0 ORDER BY nama_barang";
+                break;
+            case "stok menipis":
+                query = "SELECT * FROM barang WHERE stok > 0 AND stok <= 10 ORDER BY stok ASC, nama_barang";
+                break;
+            case "stok aman":
+                query = "SELECT * FROM barang WHERE stok > 10 ORDER BY nama_barang";
+                break;
+            default:
+                return getAllBarang();
+        }
+        
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    Barang b = new Barang();
+                    b.setId(rs.getInt("id"));
+                    b.setNamaBarang(rs.getString("nama_barang"));
+                    b.setStok(rs.getInt("stok"));
+                    b.setHarga(rs.getDouble("harga"));
+                    list.add(b);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    // Inner class untuk statistik stok
+    public static class StokStatistik {
+        private int totalProduk;
+        private int stokHabis;
+        private int stokMenipis;
+        private double nilaiTotalStok;
+        
+        // Getters and setters
+        public int getTotalProduk() { return totalProduk; }
+        public void setTotalProduk(int totalProduk) { this.totalProduk = totalProduk; }
+        
+        public int getStokHabis() { return stokHabis; }
+        public void setStokHabis(int stokHabis) { this.stokHabis = stokHabis; }
+        
+        public int getStokMenipis() { return stokMenipis; }
+        public void setStokMenipis(int stokMenipis) { this.stokMenipis = stokMenipis; }
+        
+        public double getNilaiTotalStok() { return nilaiTotalStok; }
+        public void setNilaiTotalStok(double nilaiTotalStok) { this.nilaiTotalStok = nilaiTotalStok; }
+    }
+}

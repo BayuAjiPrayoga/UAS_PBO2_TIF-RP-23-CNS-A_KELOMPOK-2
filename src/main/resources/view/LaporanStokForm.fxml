@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerui.LaporanStokFormController">
+   <children>
+      <VBox spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0">
+               <children>
+                  <Label styleClass="form-title" text="📊 Laporan Stok Produk">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            
+            <!-- Filter Section -->
+            <VBox spacing="15.0" styleClass="filter-section">
+               <children>
+                  <Label styleClass="section-title" text="Filter Laporan">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  
+                  <HBox spacing="20.0" alignment="CENTER_LEFT">
+                     <children>
+                        <!-- Status Filter -->
+                        <VBox spacing="5.0">
+                           <children>
+                              <Label text="Status Stok:" />
+                              <ComboBox fx:id="statusComboBox" prefWidth="150.0" promptText="Semua Status" />
+                           </children>
+                        </VBox>
+                        
+                        <!-- Category Filter -->
+                        <VBox spacing="5.0">
+                           <children>
+                              <Label text="Kategori:" />
+                              <ComboBox fx:id="kategoriComboBox" prefWidth="150.0" promptText="Semua Kategori" />
+                           </children>
+                        </VBox>
+                        
+                        <!-- Search -->
+                        <VBox spacing="5.0">
+                           <children>
+                              <Label text="Cari Produk:" />
+                              <TextField fx:id="searchField" prefWidth="200.0" promptText="Nama produk..." />
+                           </children>
+                        </VBox>
+                        
+                        <!-- Actions -->
+                        <VBox spacing="5.0">
+                           <children>
+                              <Label text=" " />
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Button fx:id="filterButton" onAction="#handleFilter" text="Filter" styleClass="btn-primary" />
+                                    <Button fx:id="resetButton" onAction="#handleReset" text="Reset" styleClass="btn-secondary" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+            </VBox>
+            
+            <!-- Statistics Cards -->
+            <HBox spacing="15.0" alignment="CENTER">
+               <children>
+                  <VBox spacing="5.0" styleClass="stat-card" alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="totalProdukLabel" styleClass="stat-number" text="0">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Label>
+                        <Label styleClass="stat-label" text="Total Produk" />
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
+                  
+                  <VBox spacing="5.0" styleClass="stat-card-warning" alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="stokMenipisLabel" styleClass="stat-number" text="0">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Label>
+                        <Label styleClass="stat-label" text="Stok Menipis" />
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
+                  
+                  <VBox spacing="5.0" styleClass="stat-card-danger" alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="stokHabisLabel" styleClass="stat-number" text="0">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Label>
+                        <Label styleClass="stat-label" text="Stok Habis" />
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
+                  
+                  <VBox spacing="5.0" styleClass="stat-card-success" alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="nilaiStokLabel" styleClass="stat-number" text="Rp 0">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label styleClass="stat-label" text="Nilai Total Stok" />
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+            
+            <!-- Table Section -->
+            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="15.0">
+                     <children>
+                        <Label styleClass="section-title" text="Detail Stok Produk">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="exportButton" onAction="#handleExport" text="📄 Export Excel" styleClass="btn-success" />
+                        <Button fx:id="printButton" onAction="#handlePrint" text="🖨️ Print" styleClass="btn-info" />
+                     </children>
+                  </HBox>
+                  
+                  <TableView fx:id="stokTable" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="colKode" prefWidth="80.0" text="Kode" />
+                        <TableColumn fx:id="colNama" prefWidth="200.0" text="Nama Produk" />
+                        <TableColumn fx:id="colStokTersedia" prefWidth="100.0" text="Stok Tersedia" />
+                        <TableColumn fx:id="colHargaSatuan" prefWidth="120.0" text="Harga Satuan" />
+                        <TableColumn fx:id="colNilaiStok" prefWidth="120.0" text="Nilai Stok" />
+                        <TableColumn fx:id="colStatus" prefWidth="100.0" text="Status" />
+                        <TableColumn fx:id="colTerakhirUpdate" prefWidth="150.0" text="Terakhir Update" />
+                        <TableColumn fx:id="colAction" prefWidth="100.0" text="Aksi" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+            
+            <!-- Footer Info -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="footer-info">
+               <children>
+                  <Label fx:id="totalRecordsLabel" text="Total: 0 produk" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lastUpdateLabel" text="Terakhir diperbarui: -" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

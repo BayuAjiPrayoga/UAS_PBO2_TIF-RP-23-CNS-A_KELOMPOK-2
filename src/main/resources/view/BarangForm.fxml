@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllerui.BarangFormController"
+            prefWidth="400" prefHeight="300"
+            styleClass="form-root">
+
+    <VBox spacing="10" alignment="CENTER" layoutX="50" layoutY="30" prefWidth="300">
+
+        <Label text="Form Barang" styleClass="form-title"/>
+
+        <TextField fx:id="namaField" promptText="Nama Barang" styleClass="input-field"/>
+        <TextField fx:id="stokField" promptText="Stok" styleClass="input-field"/>
+        <TextField fx:id="hargaField" promptText="Harga" styleClass="input-field"/>
+
+        <Button fx:id="btnSimpan" text="Simpan" onAction="#handleSimpan" styleClass="btn-submit"/>
+
+    </VBox>
+</AnchorPane>
