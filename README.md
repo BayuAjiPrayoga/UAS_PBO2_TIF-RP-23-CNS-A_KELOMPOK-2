@@ -317,7 +317,7 @@ Keempat pilar ini bekerja sama membuat aplikasi KASIRIN jadi lebih **rapi**, **a
 
 <ul>
   <li>Github: <a href="https://github.com/BayuAjiPrayoga/UAS_PBO2_TIF-RP-23-CNS-A_KELOMPOK-2">Github</a></li>
-  <li>Youtube: <a href="">Youtube</a></li>
+  <li>Youtube: <a href="https://youtu.be/dSOez_aBmGo?si=UEsOAgGFKksomAab">Youtube</a></li>
 </ul>
 
 ## Schema Database
